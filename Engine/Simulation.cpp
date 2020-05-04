@@ -43,6 +43,7 @@ void Simulation::UpdateModel()
 {
     particles.populateMatrix(rng);
     particles.pathFind();
+    particles.shortestPath();
 }
 
 void Simulation::ComposeFrame()
