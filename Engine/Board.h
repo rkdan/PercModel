@@ -14,7 +14,7 @@ private:
 	static constexpr int borderThick = 5;
 	static constexpr Color borderColor = Colors::Blue;
 	static constexpr Color particleColor = Colors::Green;
-	static constexpr Color searchColor = Colors::LightGray;
+	static constexpr Color searchColor = Colors::Gray;
 	static constexpr Color pathColor = Colors::Red;
 	Graphics& gfx;
 };
