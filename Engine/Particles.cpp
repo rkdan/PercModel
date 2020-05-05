@@ -1,5 +1,5 @@
 #include "Particles.h"
-
+#include <stdio.h>
 
 Particles::Particles(std::mt19937& rng)
 {
@@ -20,21 +20,6 @@ void Particles::populateMatrix(std::mt19937& rng)
 {
 	if (nParticles < nParticlesMax)
 	{
-		//particleMatrix[0][5] = 1;
-		//particleMatrix[1][5] = 1;
-		//particleMatrix[2][5] = 1;
-		//particleMatrix[3][5] = 1;
-		//particleMatrix[4][5] = 1;
-		//particleMatrix[4][6] = 1;
-		//particleMatrix[5][5] = 1;
-		//particleMatrix[6][5] = 1;
-		//particleMatrix[7][5] = 1;
-		//particleMatrix[3][4] = 1;
-		//particleMatrix[3][3] = 1;
-		//particleMatrix[4][3] = 1;
-		//particleMatrix[8][5] = 1;
-		//particleMatrix[9][5] = 1;
-		//++nParticles;
 		std::uniform_int_distribution<int> xPos(0, width - 1);
 		std::uniform_int_distribution<int> yPos(0, height - 1);
 		int i = xPos(rng);
@@ -53,110 +38,114 @@ void Particles::populateMatrix(std::mt19937& rng)
 
 void Particles::pathFind()
 {
-	std::stack<Location> Q;
-	std::stack<Location> shortestQ;
-	int i = 0;
-	for (int j = 0; j < height; ++j)
+	for (int ii = 0; ii < height; ++ii)
 	{
-		bool isEmpty = false;
-		bool isEnd = false;
-		
-		if (particleMatrix[0][j] == 1)
+		int searchMatrix[width][height] = { 0 };
+		int rr = ii;
+		int cc = 0;
+		if (particleMatrix[cc][rr] == 1)
 		{
-			std::stack<Location> currentQ;
-			searchMatrix[i][j] = 1;
-			//Location source = { i, j };
-			Location current = { i , j };
-			currentQ.push(current);
-			//q.push(current);
-			while (isEnd == false && isEmpty == false)
-			{	
-				bool pushed = false;
-				searchMatrix[current.x][current.y] = 1;
-				if (current.x == width - 1) 
-				{ 
-					isEnd = true;
-					currentQ.push(current);
-				}
-				else
+			int dr[3] = { 0, 1, -1 };
+			int dc[3] = { 1, 0, 0 };
+			int moveCount = 0;
+			int nodesLeft = 1;
+			int nodesNext = 0;
+			bool reachedEnd = false;
+			std::queue<Location> mainQ;
+			Location source = { cc, rr };
+			Location current;
+			searchMatrix[0][rr] = 1;
+			mainQ.push(source);
+			Location cameFromMatrix[width][height] = { 0 };
+			while (mainQ.size() > 0)
+			{
+				current = mainQ.front();
+				mainQ.pop();
+				if (current.x == width - 1)
 				{
-					// Look right
-					if (searchMatrix[current.x + 1][current.y] != 1 && 
-						particleMatrix[current.x + 1][current.y] == 1)
+					reachedEnd = true;
+					break;
+				}
+				for (int i = 0; i < 3; i++)
+				{
+					cc = current.x + dc[i];
+					rr = current.y + dr[i];
+					if (rr >= 0 && cc > 0 && rr < width && cc < height)
 					{
-						Q.push({ current.x + 1, current.y });
-						pushed = true;
-					}
-					// Look up
-					if (current.y > 1 &&
-						searchMatrix[current.x][current.y - 1] != 1 && 
-						particleMatrix[current.x][current.y - 1] == 1 &&
-						current.y != 0) 
-					{
-						Q.push({ current.x, current.y - 1 });
-						pushed = true;
-					}
-					// Look down
-					if (current.y < 40 &&
-						searchMatrix[current.x][current.y + 1] != 1 && 
-						particleMatrix[current.x][current.y + 1] == 1 &&
-						current.y + 1 != height)
-					{
-						Q.push({ current.x, current.y + 1 });
-						pushed = true;
-					}
-					if (!pushed && currentQ.size() > 1)
-					{
-						currentQ.pop();
-						current = currentQ.top();
-					}
-					else if (currentQ.size() == 1)
-					{
-						currentQ.pop();
+						if (searchMatrix[cc][rr] != 1 &&
+							particleMatrix[cc][rr] == 1)
+						{
+							cameFromMatrix[cc][rr].x = current.x;
+							cameFromMatrix[cc][rr].y = current.y;
+							mainQ.push({ cc, rr });
+							searchMatrix[cc][rr] = 1;
+							nodesNext++;
+						}
 					}
 				}
-				if (Q.size() == 0)
+				nodesLeft--;
+				if (nodesLeft == 0)
 				{
-					isEmpty = true;
+					nodesLeft = nodesNext;
+					nodesNext = 0;
+					moveCount++;
 				}
-				if (!pushed && !isEmpty && currentQ.size() == 0)
+			}
+			if (reachedEnd)
+			{
+				int distance = 0;
+				int shortestDist = 0;
+				
+				int i = width - 1;
+				for (int j = 0; j < height; j++)
 				{
-					currentQ.pop();
-					current = Q.top();
-					currentQ.push(current);
-					Q.pop();
-				}
-				if (isEnd == true)
-				{
-					if (shortestQ.size() == 0)
+					if (cameFromMatrix[i][j].y != 0)
 					{
-						shortestQ = currentQ;
+						std::queue<Location> currentQ;
+						distance++;
+						current = cameFromMatrix[i][j];
+						currentQ.push(current);
+						while (current.x > 0)
+						{
+							int c = current.x;
+							int r = current.y;
+							current = cameFromMatrix[current.x][current.y];
+							currentQ.push(current);
+							distance++;
+						}
+						if (shortestQ.size() == 0)
+						{
+							shortestDist = distance;
+							shortestQ = currentQ;
+						}
+						else if (currentQ.size() < shortestQ.size())
+						{
+							shortestQ = currentQ;
+						}
 					}
-					else if (currentQ.size() < shortestQ.size())
-					{
-						shortestQ = currentQ;
-					}
-				}
-				else if (!Q.empty() && pushed)
-				{
-					current = Q.top();
-					currentQ.push(current);
-					Q.pop();
 				}
 			}
 		}
+		for (int m = 0; m < width; m++)
+		{
+			for (int n = 0; n < height; n++)
+				if (searchMatrix[m][n] == 1)
+				{
+					drawSearchMatrix[m][n] = 1;
+				}
+		}
 	}
-	while (!shortestQ.empty())
+	if (!shortestQ.empty())
 	{
-		Location newLoc = shortestQ.top();
-		shortestQ.pop();
-		pathMatrix[newLoc.x][newLoc.y] = 1;
+		Location next;
+		next = shortestQ.front();
+		pathMatrix[next.x + 1][next.y] = 1;
+		while (!shortestQ.empty())
+		{
+			next = shortestQ.front();
+			shortestQ.pop();
+			pathMatrix[next.x][next.y] = 1;
+
+		}
 	}
-	
 }
-
-void Particles::shortestPath()
-{
-
-}
-

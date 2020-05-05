@@ -23,19 +23,19 @@ void Board::Draw(Particles& particles)
 				int y0 = j * dimensions + yPad;
 				gfx.DrawRectDim(x0+1, y0+1, dimensions-2, dimensions-2, particleColor);
 			}
-			if (particles.searchMatrix[i][j] == 1)
+			if (particles.drawSearchMatrix[i][j] == 1)
 			{
 				int x0 = i * dimensions + xPad;
 				int y0 = j * dimensions + yPad;
-				gfx.DrawRectDim(x0+2, y0+2, dimensions-4, dimensions-4, searchColor);
-				particles.searchMatrix[i][j] = 0;
+				gfx.DrawRectDim(x0+1, y0+1, dimensions-2, dimensions-2, searchColor);
+				particles.drawSearchMatrix[i][j] = 0;
 			}
 			if (particles.pathMatrix[i][j] == 1)
 			{
 				int x0 = i * dimensions + xPad;
 				int y0 = j * dimensions + yPad;
-				gfx.DrawRectDim(x0 + 2, y0 + 2, dimensions - 4, dimensions - 4, pathColor);
-				//particles.pathMatrix[i][j] = 0;
+				gfx.DrawRectDim(x0 + 1, y0 + 1, dimensions - 2, dimensions - 2, pathColor);
+				particles.pathMatrix[i][j] = 0;
 			}
 		}
 	}
