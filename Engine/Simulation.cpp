@@ -25,7 +25,7 @@ Simulation::Simulation( MainWindow& wnd )
 	:
 	wnd( wnd ),
 	gfx( wnd ),
-    rng(std::random_device()()),
+    rng(rng),//std::random_device()()),
     particles(rng),
     board(gfx)
 {
@@ -43,7 +43,7 @@ void Simulation::UpdateModel()
 {
     particles.populateMatrix(rng);
     particles.pathFind();
-    particles.shortestPath();
+    //particles.shortestPath();
 }
 
 void Simulation::ComposeFrame()

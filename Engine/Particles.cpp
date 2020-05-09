@@ -47,15 +47,13 @@ void Particles::pathFind()
 		{
 			int dr[3] = { 0, 1, -1 };
 			int dc[3] = { 1, 0, 0 };
-			int moveCount = 0;
 			int nodesLeft = 1;
 			int nodesNext = 0;
 			bool reachedEnd = false;
 			std::queue<Location> mainQ;
-			Location source = { cc, rr };
-			Location current;
+			Location current = { cc, rr };
 			searchMatrix[0][rr] = 1;
-			mainQ.push(source);
+			mainQ.push(current);
 			Location cameFromMatrix[width][height] = { 0 };
 			while (mainQ.size() > 0)
 			{
@@ -88,21 +86,16 @@ void Particles::pathFind()
 				{
 					nodesLeft = nodesNext;
 					nodesNext = 0;
-					moveCount++;
 				}
 			}
 			if (reachedEnd)
 			{
-				int distance = 0;
-				int shortestDist = 0;
-				
 				int i = width - 1;
 				for (int j = 0; j < height; j++)
 				{
 					if (cameFromMatrix[i][j].y != 0)
 					{
 						std::queue<Location> currentQ;
-						distance++;
 						current = cameFromMatrix[i][j];
 						currentQ.push(current);
 						while (current.x > 0)
@@ -111,11 +104,9 @@ void Particles::pathFind()
 							int r = current.y;
 							current = cameFromMatrix[current.x][current.y];
 							currentQ.push(current);
-							distance++;
 						}
 						if (shortestQ.size() == 0)
 						{
-							shortestDist = distance;
 							shortestQ = currentQ;
 						}
 						else if (currentQ.size() < shortestQ.size())
