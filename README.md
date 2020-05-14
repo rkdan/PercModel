@@ -1,6 +1,6 @@
 # PercModel
 
-A simple toy percolation model with a shortest path finder.
+A simple toy percolation model with a shortest path finder. Mainly to facilitate learning C++.
 
 I used the Chili Framework in order to visually represent particles being randomly deposited on a n x n substrate. As the particles are deposited, the pathFind() algorithm is constantly probing for path from one side to the other using a breadth-first search. Once a path is found, the findShortestPath() function compares the current path with the shortest path. In this way, we find the path that covers the shortest distance from one side to the other.
 
