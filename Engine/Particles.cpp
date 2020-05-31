@@ -1,7 +1,11 @@
 #include "Particles.h"
 #include <stdio.h>
 
-Particles::Particles(std::mt19937& rng)
+Particles::Particles(std::mt19937& rng, int width, int height, int nParticlesMax)
+	:
+	width(width),
+	height(height),
+	nParticlesMax(nParticlesMax)
 {
 	populateMatrix(rng);
 }
@@ -40,7 +44,7 @@ void Particles::pathFind()
 {
 	for (int ii = 0; ii < height; ++ii)
 	{
-		int searchMatrix[width][height] = { 0 };
+		vector<int> searchMatrix(width*height);
 		int rr = ii;
 		int cc = 0;
 		if (particleMatrix[cc*width  + rr] == 1)
@@ -51,7 +55,7 @@ void Particles::pathFind()
 			std::queue<Location> mainQ;
 			Location current = { cc, rr };
 			vector<Location> cameFromMatrix(width*height);
-			searchMatrix[0][rr] = 1;
+			searchMatrix[rr] = 1;
 			mainQ.push(current);
 			while (mainQ.size() > 0)
 			{
@@ -66,7 +70,7 @@ void Particles::pathFind()
 		for (int m = 0; m < width; m++)
 		{
 			for (int n = 0; n < height; n++)
-				if (searchMatrix[m][n] == 1)
+				if (searchMatrix[m*width + n] == 1)
 				{
 					drawSearchMatrix[m*width + n] = 1;
 				}
@@ -94,7 +98,7 @@ void Particles::buildPath(std::queue<Location>& shortestQ)
 void Particles::searchNeighbours(bool& reachedEnd, 
 	std::queue<Location>& mainQ, Location& current, 
 	int& rr, int& cc, int& nodesNext, 
-	int searchMatrix[width][height], vector<int> particleMatrix, vector<Location>& cameFromMatrix)
+	vector<int>& searchMatrix, vector<int> particleMatrix, vector<Location>& cameFromMatrix)
 {
 	int dr[3] = { 0, 1, -1 };
 	int dc[3] = { 1, 0, 0 };
@@ -110,13 +114,13 @@ void Particles::searchNeighbours(bool& reachedEnd,
 		rr = current.y + dr[i];
 		if (rr >= 0 && cc > 0 && rr < width && cc < height)
 		{
-			if (searchMatrix[cc][rr] != 1 &&
+			if (searchMatrix[cc*width + rr] != 1 &&
 				particleMatrix[cc * width + rr] == 1)
 			{
 				cameFromMatrix[cc*width + rr].x = current.x;
 				cameFromMatrix[cc*width + rr].y = current.y;
 				mainQ.push({ cc, rr });
-				searchMatrix[cc][rr] = 1;
+				searchMatrix[cc*width + rr] = 1;
 				nodesNext++;
 			}
 		}

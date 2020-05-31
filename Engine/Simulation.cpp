@@ -25,8 +25,8 @@ Simulation::Simulation( MainWindow& wnd )
 	:
 	wnd( wnd ),
 	gfx( wnd ),
-    rng(),//std::random_device()()),
-    particles(rng),
+    rng(std::random_device()()),
+    particles(rng, 20, 20, 300),
     board(gfx)
 {
 }
