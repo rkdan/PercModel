@@ -17,25 +17,28 @@ void Board::Draw(Particles& particles)
 	{
 		for (int j = 0; j < particles.height; j++)
 		{
-			if (particles.particleMatrix[i][j] == 1)
+			if (particles.particleMatrix[i*width + j] == 1)
 			{
-				int x0 = i * dimensions + xPad;
-				int y0 = j * dimensions + yPad;
-				gfx.DrawRectDim(x0+1, y0+1, dimensions-2, dimensions-2, particleColor);
+				int x0 = i * dimensions + xPad + dimensions/2;
+				int y0 = j * dimensions + yPad + dimensions/2;
+				gfx.DrawCircle(x0, y0, dimensions/2, particleColor);
+				//gfx.DrawRectDim(x0+1, y0+1, dimensions-2, dimensions-2, particleColor);
 			}
-			if (particles.drawSearchMatrix[i][j] == 1)
+			if (particles.drawSearchMatrix[i*width + j] == 1)
 			{
-				int x0 = i * dimensions + xPad;
-				int y0 = j * dimensions + yPad;
-				gfx.DrawRectDim(x0+1, y0+1, dimensions-2, dimensions-2, searchColor);
-				particles.drawSearchMatrix[i][j] = 0;
+				int x0 = i * dimensions + xPad + dimensions / 2;
+				int y0 = j * dimensions + yPad + dimensions / 2;
+				gfx.DrawCircle(x0, y0, dimensions/2, searchColor);
+				//gfx.DrawRectDim(x0+1, y0+1, dimensions-2, dimensions-2, searchColor);
+				particles.drawSearchMatrix[i*width + j] = 0;
 			}
-			if (particles.pathMatrix[i][j] == 1)
+			if (particles.pathMatrix[i*width + j] == 1)
 			{
-				int x0 = i * dimensions + xPad;
-				int y0 = j * dimensions + yPad;
-				gfx.DrawRectDim(x0 + 1, y0 + 1, dimensions - 2, dimensions - 2, pathColor);
-				particles.pathMatrix[i][j] = 0;
+				int x0 = i * dimensions + xPad + dimensions / 2;
+				int y0 = j * dimensions + yPad + dimensions / 2;
+				gfx.DrawCircle(x0, y0, dimensions/2, pathColor);
+				//gfx.DrawRectDim(x0 + 1, y0 + 1, dimensions - 2, dimensions - 2, pathColor);
+				particles.pathMatrix[i*width + j] = 0;
 			}
 		}
 	}

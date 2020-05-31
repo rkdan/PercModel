@@ -61,6 +61,7 @@ public:
 	{
 		DrawRect( x0,y0,x0 + width,y0 + height,c );
 	}
+	void DrawCircle(int x, int y, int rad, Color c);
 	~Graphics();
 private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain>				pSwapChain;
@@ -77,6 +78,6 @@ private:
 	D3D11_MAPPED_SUBRESOURCE							mappedSysBufferTexture;
 	Color*                                              pSysBuffer = nullptr;
 public:
-	static constexpr int ScreenWidth = 800;
-	static constexpr int ScreenHeight = 800;
+	static constexpr int ScreenWidth = 1400;
+	static constexpr int ScreenHeight = 1200;
 };

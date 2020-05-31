@@ -10,7 +10,7 @@ public:
 	void Draw(Particles& particles);
 private:
 	void DrawBorder(int xPad, int yPad, int width, int height, int dimensions);
-	static constexpr int dimensions = 10;
+	static constexpr int dimensions = 16;
 	static constexpr int borderThick = 5;
 	static constexpr Color borderColor = Colors::Blue;
 	static constexpr Color particleColor = Colors::Green;
