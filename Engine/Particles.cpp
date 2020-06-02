@@ -48,7 +48,7 @@ void Particles::pathFind()
 		int rr = row;
 		int cc = 0;
 		//int elem = ii*width;
-		if (particleMatrix[row*width] == State::Occupied)
+		if (particleMatrix[row*width] == State::Occupied || particleMatrix[row * width] == State::Searched)
 		{
 			int nodesLeft = 1;
 			int nodesNext = 0;
@@ -67,14 +67,16 @@ void Particles::pathFind()
 				findShortestPath(cameFromMatrix, current, shortestQ);
 			}
 		}
-		// Have to build a seperate matrix to feed to the board drawing method.
+		// I suspect this can be done elsewhere, rather than iterating AGAIN through all elements.
 		for (int n = 0; n < width; n++)
 		{
 			for (int m = 0; m < height; m++)
-				if (searchMatrix[m*width + n] == 1)
+			{
+				if (searchMatrix[m * width + n] == 1)
 				{
-					drawSearchMatrix[m*width + n] = 1;
+					particleMatrix[m * width + n] = State::Searched;
 				}
+			}
 		}
 	}
 	if (!shortestQ.empty())
@@ -116,7 +118,7 @@ void Particles::searchNeighbours(bool& reachedEnd,
 		if (rr >= 0 && cc > 0 && cc < width && rr < height)
 		{
 			if (searchMatrix[rr*width + cc] != 1 &&
-				particleMatrix[rr* width + cc] == State::Occupied)
+				(particleMatrix[rr* width + cc] == State::Occupied || particleMatrix[rr * width + cc] == State::Searched))
 			{
 				cameFromMatrix[rr*width + cc].x = current.x;
 				cameFromMatrix[rr*width + cc].y = current.y;

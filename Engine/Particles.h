@@ -27,12 +27,10 @@ public:
 	const int nParticlesMax;
 	int nParticles = 0;
 	vector<int> particleMatrix = vector<int>(size);
-	//vector<int> pathMatrix = vector<int>(size);
-	vector<int> drawSearchMatrix = vector<int>(size);
 private:
 	
 	void buildPath(std::queue<Location>& shortestQ);
-	// The below function is possibly an abomination
+	// The below function is possibly an abomination to both man and god
 	void searchNeighbours(bool& reachedEnd, 
 		std::queue<Location>& mainQ, Location& current, 
 		int& rr, int& cc, int& nodesNext, 

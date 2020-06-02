@@ -24,13 +24,12 @@ void Board::Draw(Particles& particles)
 				gfx.DrawCircle(x0, y0, dimensions/2, particleColor);
 				//gfx.DrawRectDim(x0+1, y0+1, dimensions-2, dimensions-2, particleColor);
 			}
-			if (particles.drawSearchMatrix[int(r*width + c)] == 1)
+			if (particles.particleMatrix[int(r*width + c)] == Particles::State::Searched)
 			{
 				int x0 = c * dimensions + xPad + dimensions / 2;
 				int y0 = r * dimensions + yPad + dimensions / 2;
 				gfx.DrawCircle(x0, y0, dimensions/2, searchColor);
 				//gfx.DrawRectDim(x0+1, y0+1, dimensions-2, dimensions-2, searchColor);
-				//particles.drawSearchMatrix[int(c*width + r)] = 0;
 			}
 			if (particles.particleMatrix[int(r*width + c)] == Particles::State::Path)
 			{
