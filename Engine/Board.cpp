@@ -13,32 +13,32 @@ void Board::Draw(Particles& particles)
 	const int xPad = (gfx.ScreenWidth - width * dimensions) / 2;
 	const int yPad = (gfx.ScreenHeight - height * dimensions) / 2;
 	DrawBorder(xPad, yPad, width, height, dimensions);
-	for (int i = 0; i < particles.width; i++)
+	for (int r = 0; r < particles.height; r++)
 	{
-		for (int j = 0; j < particles.height; j++)
+		for (int c = 0; c < particles.width; c++)
 		{
-			if (particles.particleMatrix[int(i*width + j)] == Particles::State::Occupied)
+			if (particles.particleMatrix[int(r*width + c)] == Particles::State::Occupied)
 			{
-				int x0 = i * dimensions + xPad + dimensions/2;
-				int y0 = j * dimensions + yPad + dimensions/2;
+				int x0 = c * dimensions + xPad + dimensions/2;
+				int y0 = r * dimensions + yPad + dimensions/2;
 				gfx.DrawCircle(x0, y0, dimensions/2, particleColor);
 				//gfx.DrawRectDim(x0+1, y0+1, dimensions-2, dimensions-2, particleColor);
 			}
-			if (particles.drawSearchMatrix[int(i*width + j)] == 1)
+			if (particles.drawSearchMatrix[int(r*width + c)] == 1)
 			{
-				int x0 = i * dimensions + xPad + dimensions / 2;
-				int y0 = j * dimensions + yPad + dimensions / 2;
+				int x0 = c * dimensions + xPad + dimensions / 2;
+				int y0 = r * dimensions + yPad + dimensions / 2;
 				gfx.DrawCircle(x0, y0, dimensions/2, searchColor);
 				//gfx.DrawRectDim(x0+1, y0+1, dimensions-2, dimensions-2, searchColor);
-				particles.drawSearchMatrix[int(i*width + j)] = 0;
+				//particles.drawSearchMatrix[int(c*width + r)] = 0;
 			}
-			if (particles.particleMatrix[int(i*width + j)] == Particles::State::Path)
+			if (particles.particleMatrix[int(r*width + c)] == Particles::State::Path)
 			{
-				int x0 = i * dimensions + xPad + dimensions / 2;
-				int y0 = j * dimensions + yPad + dimensions / 2;
+				int x0 = c * dimensions + xPad + dimensions / 2;
+				int y0 = r * dimensions + yPad + dimensions / 2;
 				gfx.DrawCircle(x0, y0, dimensions/2, pathColor);
 				//gfx.DrawRectDim(x0 + 1, y0 + 1, dimensions - 2, dimensions - 2, pathColor);
-				particles.particleMatrix[int(i*width + j)] = Particles::State::Occupied;
+				particles.particleMatrix[int(r*width + c)] = Particles::State::Occupied;
 			}
 		}
 	}

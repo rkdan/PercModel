@@ -42,21 +42,21 @@ void Particles::populateMatrix(std::mt19937& rng)
 
 void Particles::pathFind()
 {
-	for (int ii = 0; ii < height; ++ii)
+	for (int row = 0; row < height; ++row)
 	{
 		vector<int> searchMatrix(width*height);
-		int rr = ii;
+		int rr = row;
 		int cc = 0;
 		//int elem = ii*width;
-		if (particleMatrix[ii] == State::Occupied)
+		if (particleMatrix[row*width] == State::Occupied)
 		{
 			int nodesLeft = 1;
 			int nodesNext = 0;
 			bool reachedEnd = false;
 			std::queue<Location> mainQ;
-			Location current = { 0, ii };
+			Location current = { 0, row };
 			vector<Location> cameFromMatrix(width*height);
-			searchMatrix[ii] = 1;
+			searchMatrix[row*width] = 1;
 			mainQ.push(current);
 			while (mainQ.size() > 0)
 			{
@@ -68,9 +68,9 @@ void Particles::pathFind()
 			}
 		}
 		// Have to build a seperate matrix to feed to the board drawing method.
-		for (int m = 0; m < width; m++)
+		for (int n = 0; n < width; n++)
 		{
-			for (int n = 0; n < height; n++)
+			for (int m = 0; m < height; m++)
 				if (searchMatrix[m*width + n] == 1)
 				{
 					drawSearchMatrix[m*width + n] = 1;
@@ -87,12 +87,12 @@ void Particles::buildPath(std::queue<Location>& shortestQ)
 {
 	Location next;
 	next = shortestQ.front();
-	particleMatrix[(next.x + 1)*width + next.y] = State::Path;
+	particleMatrix[(next.y)*width + next.x + 1] = State::Path;
 	while (!shortestQ.empty())
 	{
 		next = shortestQ.front();
 		shortestQ.pop();
-		particleMatrix[next.x * width + next.y] = State::Path;
+		particleMatrix[next.y * width + next.x] = State::Path;
 	}
 }
 
@@ -115,13 +115,13 @@ void Particles::searchNeighbours(bool& reachedEnd,
 		rr = current.y + dr[i];
 		if (rr >= 0 && cc > 0 && cc < width && rr < height)
 		{
-			if (searchMatrix[cc*width + rr] != 1 &&
-				particleMatrix[cc * width + rr] == State::Occupied)
+			if (searchMatrix[rr*width + cc] != 1 &&
+				particleMatrix[rr* width + cc] == State::Occupied)
 			{
-				cameFromMatrix[cc*width + rr].x = current.x;
-				cameFromMatrix[cc*width + rr].y = current.y;
+				cameFromMatrix[rr*width + cc].x = current.x;
+				cameFromMatrix[rr*width + cc].y = current.y;
 				mainQ.push({ cc, rr });
-				searchMatrix[cc*width + rr] = 1;
+				searchMatrix[rr*width + cc] = 1;
 				nodesNext++;
 			}
 		}
@@ -130,19 +130,19 @@ void Particles::searchNeighbours(bool& reachedEnd,
 
 void Particles::findShortestPath(vector<Location>& cameFromMatrix, Location& current, std::queue<Location>& shortestQ)
 {
-	int i = width - 1;
-	for (int j = 0; j < height; j++)
+	int col = width - 1;
+	for (int row = 0; row < height; row++)
 	{
-		if (cameFromMatrix[i*width + j].y != 0)
+		if (cameFromMatrix[row*width + col].y != 0)
 		{
 			std::queue<Location> currentQ;
-			current = cameFromMatrix[i*width + j];
+			current = cameFromMatrix[row*width + col];
 			currentQ.push(current);
 			while (current.x > 0)
 			{
 				int c = current.x;
 				int r = current.y;
-				current = cameFromMatrix[c * width + r];
+				current = cameFromMatrix[r * width + c];
 				currentQ.push(current);
 			}
 			if (shortestQ.size() == 0 || currentQ.size() < shortestQ.size())
