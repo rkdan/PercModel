@@ -28,9 +28,9 @@ void Particles::populateMatrix(std::mt19937& rng)
 		std::uniform_int_distribution<int> yPos(0, height - 1);
 		int i = xPos(rng);
 		int j = yPos(rng);
-		if (particleMatrix[i*width + j] == 0)
+		if (particleMatrix[i*width + j] == State::Empty)
 		{
-			particleMatrix[i*width + j] = 1;
+			particleMatrix[i*width + j] = State::Occupied;
 			++nParticles;
 		}
 		else
@@ -47,19 +47,20 @@ void Particles::pathFind()
 		vector<int> searchMatrix(width*height);
 		int rr = ii;
 		int cc = 0;
-		if (particleMatrix[cc*width  + rr] == 1)
+		//int elem = ii*width;
+		if (particleMatrix[ii] == State::Occupied)
 		{
 			int nodesLeft = 1;
 			int nodesNext = 0;
 			bool reachedEnd = false;
 			std::queue<Location> mainQ;
-			Location current = { cc, rr };
+			Location current = { 0, ii };
 			vector<Location> cameFromMatrix(width*height);
-			searchMatrix[rr] = 1;
+			searchMatrix[ii] = 1;
 			mainQ.push(current);
 			while (mainQ.size() > 0)
 			{
-				searchNeighbours(reachedEnd, mainQ, current, rr, cc, nodesNext, searchMatrix, particleMatrix, cameFromMatrix);
+				searchNeighbours(reachedEnd, mainQ, current, rr, cc, nodesNext, searchMatrix, cameFromMatrix);
 			}
 			if (reachedEnd)
 			{
@@ -86,19 +87,19 @@ void Particles::buildPath(std::queue<Location>& shortestQ)
 {
 	Location next;
 	next = shortestQ.front();
-	pathMatrix[(next.x + 1)*width + next.y] = 1;
+	particleMatrix[(next.x + 1)*width + next.y] = State::Path;
 	while (!shortestQ.empty())
 	{
 		next = shortestQ.front();
 		shortestQ.pop();
-		pathMatrix[next.x * width + next.y] = 1;
+		particleMatrix[next.x * width + next.y] = State::Path;
 	}
 }
 
 void Particles::searchNeighbours(bool& reachedEnd, 
 	std::queue<Location>& mainQ, Location& current, 
 	int& rr, int& cc, int& nodesNext, 
-	vector<int>& searchMatrix, vector<int> particleMatrix, vector<Location>& cameFromMatrix)
+	vector<int>& searchMatrix, vector<Location>& cameFromMatrix)
 {
 	int dr[3] = { 0, 1, -1 };
 	int dc[3] = { 1, 0, 0 };
@@ -112,10 +113,10 @@ void Particles::searchNeighbours(bool& reachedEnd,
 	{
 		cc = current.x + dc[i];
 		rr = current.y + dr[i];
-		if (rr >= 0 && cc > 0 && rr < width && cc < height)
+		if (rr >= 0 && cc > 0 && cc < width && rr < height)
 		{
 			if (searchMatrix[cc*width + rr] != 1 &&
-				particleMatrix[cc * width + rr] == 1)
+				particleMatrix[cc * width + rr] == State::Occupied)
 			{
 				cameFromMatrix[cc*width + rr].x = current.x;
 				cameFromMatrix[cc*width + rr].y = current.y;
@@ -141,7 +142,7 @@ void Particles::findShortestPath(vector<Location>& cameFromMatrix, Location& cur
 			{
 				int c = current.x;
 				int r = current.y;
-				current = cameFromMatrix[current.x * width + current.y];
+				current = cameFromMatrix[c * width + r];
 				currentQ.push(current);
 			}
 			if (shortestQ.size() == 0 || currentQ.size() < shortestQ.size())
