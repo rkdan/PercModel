@@ -10,4 +10,8 @@ This program uses the Chili Framework as featured in the excellent C++ tutorials
 
 https://www.youtube.com/user/ChiliTomatoNoodle
 
-![perc1](https://github.com/rkdan/PercModel/blob/main/Images/perc1.jpg)
+![perc1](https://github.com/rkdan/PercModel/blob/master/Images/perc1.jpg)
+
+![perc2](https://github.com/rkdan/PercModel/blob/master/Images/perc2.jpg)
+
+![perc3](https://github.com/rkdan/PercModel/blob/master/Images/perc3.jpg)
