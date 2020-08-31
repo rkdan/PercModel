@@ -9,3 +9,5 @@ To find the code written by me, check out particles, board, and location. In the
 This program uses the Chili Framework as featured in the excellent C++ tutorials by ChiliTomatoNoodle. Check out his tutorials here:
 
 https://www.youtube.com/user/ChiliTomatoNoodle
+
+![perc1](https://github.com/rkdan/PercModel/blob/main/Images/perc1.jpg)
