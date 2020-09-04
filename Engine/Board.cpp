@@ -8,6 +8,7 @@ Board::Board(Graphics& gfx)
 
 void Board::Draw(Particles& particles)
 {
+	// Main board
 	int width = particles.getWidth();
 	int height = particles.getHeight();
 	const int xPad = (gfx.ScreenWidth - width * dimensions) / 2;
